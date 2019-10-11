@@ -84,6 +84,7 @@ class App:
         self.g_port = g_port
         self.g_prefix = g_prefix
         self.logfile = logfile
+        self.config_file = '/etc/graphping.conf'
         self.daemonize = True
         self.stop = False
         self.level = logging.INFO
@@ -124,9 +125,10 @@ class App:
             return srtd[mid]
 
     def process_options(self):
-        self.targets = sys.argv[1:]
-        if not self.targets:
-            self.usage()
+        if self.config_file == None:
+            self.targets = sys.argv[1:]
+            if not self.targets:
+                self.usage()
 
     def usage(self):
         print "Usage: ping-graphite <target> [<target> ...]"
@@ -138,6 +140,11 @@ class App:
             cmd = [ fping, '-c', str(packets) ] + self.targets
 
             while not self.stop:
+
+                # If the config file is defined we read the new targets from it
+                if self.config_file != None:
+                    with open(self.config_file) as f:
+                        self.targets = f.read().replace('\n', ' ').split(' ')
 
                 rtt = {}
                 sry = {}

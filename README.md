@@ -100,6 +100,8 @@ Usage
 
 `./graphping <target> [<target> ...]`
 
+If a config file is defined (one IP address per line) it reads it in every execution loop so you can daemonize it and just update the config file.
+
 License
 -------
 
